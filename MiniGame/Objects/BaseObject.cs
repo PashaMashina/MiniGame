@@ -10,6 +10,9 @@ namespace MiniGame.Objects
 {
     class BaseObject
     {
+        public Action<Marker> OnMarkerOverlap;
+        public float vX, vY;
+
         public float X;
         public float Y;
         public float Angle;

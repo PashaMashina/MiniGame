@@ -42,52 +42,63 @@ namespace MiniGame
 
             g.Clear(Color.White);
 
+            updatePlayer();
+
             // меняю тут objects на objects.ToList()
             // это будет создавать копию списка
             // и позволит модифицировать оригинальный objects прямо из цикла foreach
+            // пересчитываем пересечения
             foreach (var obj in objects.ToList())
             {
                 if (obj != player && player.Overlaps(obj, g))
                 {
-                    player.Overlap(obj); // то есть игрок пересекся с объектом
-                    obj.Overlap(player); // и объект пересекся с игроком
-
-                    //txtLog.Text = $"[{DateTime.Now:HH:mm:ss:ff}] Игрок пересекся с {obj}\n" + txtLog.Text;
-
-                    // тут проверяю что достиг маркера
-                    if (obj == marker)
-                    {
-                        // если достиг, то удаляю маркер из оригинального objects
-                        objects.Remove(marker);
-                        marker = null; // и обнуляю маркер
-                    }
+                    player.Overlap(obj);
+                    obj.Overlap(player);
                 }
+            }
 
+            // рендерим объекты
+            foreach (var obj in objects)
+            {
                 g.Transform = obj.GetTransform();
                 obj.Render(g);
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void updatePlayer()
         {
-            // тут добавляем проверку на marker не нулевой
             if (marker != null)
             {
-                //Вектор между игроком и маркером
                 float dx = marker.X - player.X;
                 float dy = marker.Y - player.Y;
-
-                //Его длина
                 float length = MathF.Sqrt(dx * dx + dy * dy);
                 dx /= length;
                 dy /= length;
 
-                //пересчитываем координаты игрока
-                player.X += dx * 2;
-                player.Y += dy * 2;
+                // по сути мы теперь используем вектор dx, dy
+                // как вектор ускорения, точнее даже вектор притяжения
+                // который притягивает игрока к маркеру
+                // 0.5 просто коэффициент который подобрал на глаз
+                // и который дает естественное ощущение движения
+                player.vX += dx * 0.5f;
+                player.vY += dy * 0.5f;
+
+                // расчитываем угол поворота игрока 
+                player.Angle = 90 - MathF.Atan2(player.vX, player.vY) * 180 / MathF.PI;
             }
 
-            //запрашиваем обновление pbMain
+            // тормозящий момент,
+            // нужен чтобы, когда игрок достигнет маркера произошло постепенное замедление
+            player.vX += -player.vX * 0.1f;
+            player.vY += -player.vY * 0.1f;
+
+            // пересчет позиция игрока с помощью вектора скорости
+            player.X += player.vX;
+            player.Y += player.vY;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
             pbMain.Invalidate();
         }
 
