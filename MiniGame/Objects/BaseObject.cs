@@ -11,6 +11,7 @@ namespace MiniGame.Objects
     class BaseObject
     {
         public Action<Marker> OnMarkerOverlap;
+        public Action<GreenCircle> OnRectangleOverlap;
         public float vX, vY;
 
         public float X;

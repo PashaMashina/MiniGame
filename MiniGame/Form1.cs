@@ -7,6 +7,9 @@ namespace MiniGame
         List<BaseObject> objects = new();
         Player player;
         Marker marker;
+        GreenCircle circle;
+        GreenCircle circle2;
+        Random rnd = new Random();
 
         public Form1()
         {
@@ -25,14 +28,35 @@ namespace MiniGame
                 marker = null;
             };
 
+            circle = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
+            circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
+
+            player.OnCircleOverlap += (c) =>
+            {
+                objects.Remove(c);
+                if (circle == c)
+                {
+                    circle = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
+                    objects.Add(circle); // и главное не забыть пололжить в objects
+                }
+                if (circle2 == c)
+                {
+                    circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
+                    objects.Add(circle2); // и главное не забыть пололжить в objects
+                }
+            };
+
             marker = new Marker(pbMain.Width / 2 + 50, pbMain.Height / 2 + 50, 0);
 
             objects.Add(marker);
             objects.Add(player);
 
-            objects.Add(new MyRectangle(50, 50, 0));
-            objects.Add(new MyRectangle(100, 100, 45));
-            objects.Add(new MyRectangle(150, 150, 30));
+
+            //objects.Add(new MyRectangle(50, 50, 0));
+            //objects.Add(new MyRectangle(100, 100, 45));
+            //objects.Add(new MyRectangle(150, 150, 30));
+            objects.Add(circle);
+            objects.Add(circle2);
 
         }
 

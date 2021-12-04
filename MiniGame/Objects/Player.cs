@@ -11,6 +11,7 @@ namespace MiniGame.Objects
     class Player : BaseObject
     {
         public Action<Marker> OnMarkerOverlap;
+        public Action<GreenCircle> OnCircleOverlap;
         public Player(float x, float y, float angle) : base(x, y, angle)
         { }
 
@@ -36,6 +37,10 @@ namespace MiniGame.Objects
             if (obj is Marker)
             {
                 OnMarkerOverlap(obj as Marker);
+            }
+            if (obj is GreenCircle)
+            {
+                OnCircleOverlap(obj as GreenCircle);
             }
         }
     }

@@ -39,7 +39,7 @@
             // 
             this.pbMain.Location = new System.Drawing.Point(12, 12);
             this.pbMain.Name = "pbMain";
-            this.pbMain.Size = new System.Drawing.Size(633, 425);
+            this.pbMain.Size = new System.Drawing.Size(612, 425);
             this.pbMain.TabIndex = 0;
             this.pbMain.TabStop = false;
             this.pbMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pbMain_Paint);
@@ -53,9 +53,9 @@
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(651, 12);
+            this.txtLog.Location = new System.Drawing.Point(630, 12);
             this.txtLog.Name = "txtLog";
-            this.txtLog.Size = new System.Drawing.Size(174, 425);
+            this.txtLog.Size = new System.Drawing.Size(195, 425);
             this.txtLog.TabIndex = 1;
             this.txtLog.Text = "";
             // 
