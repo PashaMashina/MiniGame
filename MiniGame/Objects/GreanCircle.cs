@@ -9,11 +9,18 @@ namespace MiniGame.Objects
 {
     class GreenCircle : BaseObject
     {
+        public int timer = 99;
         public GreenCircle(float x, float y, float angle) : base(x, y, angle) { }
 
         public override void Render(Graphics g)
         {
             g.FillEllipse(new SolidBrush(Color.GreenYellow), 0, 0, 30, 30);
+            g.DrawString(
+                $"{timer}",
+                new Font("Verdana", 8), // шрифт и размер
+                new SolidBrush(Color.Green), // цвет шрифта
+                25, 25 // точка в которой нарисовать текст
+);
         }
 
         public override GraphicsPath GetGraphicsPath()

@@ -10,6 +10,8 @@ namespace MiniGame
         GreenCircle circle;
         GreenCircle circle2;
         Random rnd = new Random();
+        int point = 0;
+        
 
         public Form1()
         {
@@ -28,20 +30,22 @@ namespace MiniGame
                 marker = null;
             };
 
-            circle = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
-            circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
+            circle = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
+            circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
 
             player.OnCircleOverlap += (c) =>
             {
+                point++;
+                txtPoint.Text = $"Очки: {point}";
                 objects.Remove(c);
                 if (circle == c)
                 {
-                    circle = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
+                    circle = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
                     objects.Add(circle); // и главное не забыть пололжить в objects
                 }
                 if (circle2 == c)
                 {
-                    circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 30), rnd.Next() % (pbMain.Height - 30), 0);
+                    circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
                     objects.Add(circle2); // и главное не забыть пололжить в objects
                 }
             };
@@ -62,6 +66,7 @@ namespace MiniGame
 
         private void pbMain_Paint(object sender, PaintEventArgs e)
         {
+            
             var g = e.Graphics; // вытащили объект графики из события
 
             g.Clear(Color.White);
@@ -87,6 +92,11 @@ namespace MiniGame
                 g.Transform = obj.GetTransform();
                 obj.Render(g);
             }
+        }
+
+        private void updateCircle()
+        {
+            //timer = circle.Timer; 
         }
 
         private void updatePlayer()
@@ -137,6 +147,24 @@ namespace MiniGame
 
             marker.X = e.X;
             marker.Y = e.Y;
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            circle.timer--;
+            circle2.timer--;
+            if (circle.timer <0)
+            {
+                objects.Remove(circle);
+                circle = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
+                objects.Add(circle);
+            }
+            if (circle2.timer < 0)
+            {
+                objects.Remove(circle2);
+                circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
+                objects.Add(circle2);
+            }
         }
     }
 }
