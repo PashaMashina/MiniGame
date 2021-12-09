@@ -64,6 +64,7 @@
             // txtPoint
             // 
             this.txtPoint.AutoSize = true;
+            this.txtPoint.BackColor = System.Drawing.Color.White;
             this.txtPoint.Location = new System.Drawing.Point(552, 34);
             this.txtPoint.Name = "txtPoint";
             this.txtPoint.Size = new System.Drawing.Size(48, 15);

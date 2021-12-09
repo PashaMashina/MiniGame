@@ -17,6 +17,8 @@ namespace MiniGame.Objects
         public float X;
         public float Y;
         public float Angle;
+        public Color changeColor;
+        public Color defaultColor;
 
         // добавил поле делегат, к которому можно будет привязать реакцию на собыития
         public Action<BaseObject, BaseObject> OnOverlap;

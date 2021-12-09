@@ -7,21 +7,44 @@ namespace MiniGame
         List<BaseObject> objects = new();
         Player player;
         Marker marker;
-        GreenCircle circle;
-        GreenCircle circle2;
+        RedCircle redCircle;
+        GreenCircle[] circle = new GreenCircle[2];
+        MyRectangle rect;
         Random rnd = new Random();
         int point = 0;
-        
 
         public Form1()
         {
             InitializeComponent();
 
+            rect = new MyRectangle(-300, 0, 0);
+            marker = new Marker(pbMain.Width / 2 + 50, pbMain.Height / 2 + 50, 0);
             player = new Player(pbMain.Width / 2, pbMain.Height / 2, 0);//В центре экрана
+            redCircle = new RedCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
+
+            objects. Add(rect);
+            objects.Add(redCircle);
+            objects.Add(marker);
+            objects.Add(player);
+
+            rect.OnRectangleOverlap += (b) =>
+             {
+                 b.changeColor = Color.White;
+             };
+
+
+
+            for(int i = 0; i < circle.Length; i++)
+            {
+                circle[i] = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
+                objects.Add(circle[i]);
+            }
+
+
 
             player.OnOverlap += (p, obj) =>
             {
-                txtLog.Text = $"[{DateTime.Now:HH:mm:ss:ff}] Игрок пересекся с {obj}\n" + txtLog.Text;
+               txtLog.Text = $"[{DateTime.Now:HH:mm:ss:ff}] Игрок пересекся с {obj}\n" + txtLog.Text;
             };
 
             player.OnMarkerOverlap += (m) =>
@@ -30,43 +53,39 @@ namespace MiniGame
                 marker = null;
             };
 
-            circle = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
-            circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
 
             player.OnCircleOverlap += (c) =>
             {
                 point++;
                 txtPoint.Text = $"Очки: {point}";
                 objects.Remove(c);
-                if (circle == c)
+                for (int i = 0; i < circle.Length; i++)
                 {
-                    circle = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
-                    objects.Add(circle); // и главное не забыть пололжить в objects
+                    if (circle[i] == c)
+                    {
+                        circle[i] = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
+                        objects.Add(circle[i]); // и главное не забыть пололжить в objects
+                    }
                 }
-                if (circle2 == c)
-                {
-                    circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
-                    objects.Add(circle2); // и главное не забыть пололжить в objects
-                }
+                
             };
 
-            marker = new Marker(pbMain.Width / 2 + 50, pbMain.Height / 2 + 50, 0);
 
-            objects.Add(marker);
-            objects.Add(player);
+            player.OnRedOverlap += (r) =>
+            {
+                point--;
+                if (point < 0) point = 0;
+                txtPoint.Text = $"Очки: {point}";
+                redCircle.radius = 10;
+                redCircle.X = rnd.Next() % (pbMain.Width - 35);
+                redCircle.Y = rnd.Next() % (pbMain.Height - 35);
 
-
-            //objects.Add(new MyRectangle(50, 50, 0));
-            //objects.Add(new MyRectangle(100, 100, 45));
-            //objects.Add(new MyRectangle(150, 150, 30));
-            objects.Add(circle);
-            objects.Add(circle2);
-
+            };
         }
 
         private void pbMain_Paint(object sender, PaintEventArgs e)
         {
-            
+
             var g = e.Graphics; // вытащили объект графики из события
 
             g.Clear(Color.White);
@@ -79,10 +98,14 @@ namespace MiniGame
             // пересчитываем пересечения
             foreach (var obj in objects.ToList())
             {
-                if (obj != player && player.Overlaps(obj, g))
+                if (obj != player && obj != rect && player.Overlaps(obj, g))
                 {
                     player.Overlap(obj);
                     obj.Overlap(player);
+                }
+                if (obj != rect && rect.Overlaps(obj, g))
+                {
+                    rect.Overlap(obj);
                 }
             }
 
@@ -91,12 +114,8 @@ namespace MiniGame
             {
                 g.Transform = obj.GetTransform();
                 obj.Render(g);
+                obj.changeColor = obj.defaultColor;
             }
-        }
-
-        private void updateCircle()
-        {
-            //timer = circle.Timer; 
         }
 
         private void updatePlayer()
@@ -134,6 +153,12 @@ namespace MiniGame
         private void timer1_Tick(object sender, EventArgs e)
         {
             pbMain.Invalidate();
+
+            if (rect.X>pbMain.Width+100)
+            {
+                rect.X = -300;
+            }
+            rect.X += 4;
         }
 
         private void pbMain_MouseClick(object sender, MouseEventArgs e)
@@ -151,19 +176,24 @@ namespace MiniGame
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            circle.radius--;
-            circle2.radius--;
-            if (circle.radius <0)
+            redCircle.radius+=2;
+            redCircle.X--;
+            redCircle.Y--;
+            if (redCircle.radius == 300)
             {
-                objects.Remove(circle);
-                circle = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
-                objects.Add(circle);
+                redCircle.radius = 10;
+                redCircle.X = rnd.Next() % (pbMain.Width - 35);
+                redCircle.Y = rnd.Next() % (pbMain.Height - 35);
             }
-            if (circle2.radius < 0)
+            for (int i = 0; i < circle.Length; i++)
             {
-                objects.Remove(circle2);
-                circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
-                objects.Add(circle2);
+                circle[i].radius--;
+                if (circle[i].radius == 0)
+                {
+                    objects.Remove(circle[i]);
+                    circle[i] = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
+                    objects.Add(circle[i]); // и главное не забыть пололжить в objects
+                }
             }
         }
     }

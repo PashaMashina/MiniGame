@@ -7,17 +7,17 @@ using System.Drawing.Drawing2D;
 
 namespace MiniGame.Objects
 {
-    class GreenCircle : BaseObject
+    internal class RedCircle : BaseObject
     {
-        static Random rnd = new Random();
-        public int radius = rnd.Next(40,100);
-        public GreenCircle(float x, float y, float angle) : base(x, y, angle) {
-            changeColor = defaultColor = Color.GreenYellow;
+        public int radius = 10;
+        public RedCircle(float x, float y, float angle) : base(x, y, angle) 
+        {
+            changeColor = defaultColor = Color.FromArgb(120, 255, 0, 0);
         }
 
         public override void Render(Graphics g)
         {
-            g.FillEllipse(new SolidBrush(changeColor), 0, 0, radius, radius);
+            g.FillEllipse(new SolidBrush(changeColor), 0, 0, radius, radius);            
         }
 
         public override GraphicsPath GetGraphicsPath()

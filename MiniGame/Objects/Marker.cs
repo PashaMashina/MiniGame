@@ -12,7 +12,9 @@ namespace MiniGame.Objects
     class Marker : BaseObject
     {
         public Marker(float x, float y, float angle) : base(x, y, angle)
-        { }
+        { 
+            changeColor = defaultColor = Color.Red;
+        }
 
         public override GraphicsPath GetGraphicsPath()
         {
@@ -24,9 +26,9 @@ namespace MiniGame.Objects
 
         public override void Render(Graphics g)
         {
-            g.FillEllipse(new SolidBrush(Color.Red), -3, -3, 6, 6);
-            g.DrawEllipse(new Pen(Color.Red, 2), -6, -6, 12, 12);
-            g.DrawEllipse(new Pen(Color.Red, 2), -10, -10, 20, 20);
+            g.FillEllipse(new SolidBrush(changeColor), -3, -3, 6, 6);
+            g.DrawEllipse(new Pen(changeColor, 2), -6, -6, 12, 12);
+            g.DrawEllipse(new Pen(changeColor, 2), -10, -10, 20, 20);
 
         }
     }
