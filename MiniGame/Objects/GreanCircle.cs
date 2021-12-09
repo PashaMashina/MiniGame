@@ -9,24 +9,26 @@ namespace MiniGame.Objects
 {
     class GreenCircle : BaseObject
     {
+        static Random rnd = new Random();
         public int timer = 99;
+        public int radius = rnd.Next(30,90);
         public GreenCircle(float x, float y, float angle) : base(x, y, angle) { }
 
         public override void Render(Graphics g)
         {
-            g.FillEllipse(new SolidBrush(Color.GreenYellow), 0, 0, 30, 30);
+            g.FillEllipse(new SolidBrush(Color.GreenYellow), 0, 0, radius, radius);
             g.DrawString(
-                $"{timer}",
+                $"{radius}",
                 new Font("Verdana", 8), // шрифт и размер
-                new SolidBrush(Color.Green), // цвет шрифта
-                25, 25 // точка в которой нарисовать текст
+                new SolidBrush(Color.Red), // цвет шрифта
+                radius-radius/2, radius - radius / 2 // точка в которой нарисовать текст
 );
         }
 
         public override GraphicsPath GetGraphicsPath()
         {
             var path = base.GetGraphicsPath();
-            path.AddEllipse(0, 0, 30, 30);
+            path.AddEllipse(0, 0, radius, radius);
 
             return path;
         }

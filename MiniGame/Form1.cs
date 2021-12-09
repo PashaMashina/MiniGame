@@ -151,15 +151,15 @@ namespace MiniGame
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            circle.timer--;
-            circle2.timer--;
-            if (circle.timer <0)
+            circle.radius--;
+            circle2.radius--;
+            if (circle.radius <0)
             {
                 objects.Remove(circle);
                 circle = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
                 objects.Add(circle);
             }
-            if (circle2.timer < 0)
+            if (circle2.radius < 0)
             {
                 objects.Remove(circle2);
                 circle2 = new GreenCircle(rnd.Next() % (pbMain.Width - 35), rnd.Next() % (pbMain.Height - 35), 0);
